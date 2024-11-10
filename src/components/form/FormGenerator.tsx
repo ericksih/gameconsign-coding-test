@@ -1,38 +1,35 @@
-'use client';
-import React from 'react';
-import {
-    FormGeneratorProps,
-} from "@/components/form/types";
-import {FormGeneratorLoader} from "@/components/form/FormGeneratorLoader";
-import {FormField} from "@/components/form/FormFields";
+"use client";
+import React from "react";
+import { FormGeneratorProps } from "@/components/form/types";
+import { FormGeneratorLoader } from "@/components/form/FormGeneratorLoader";
+import { FormField } from "@/components/form/FormFields";
 
+const FormGenerator = React.forwardRef<HTMLDivElement, FormGeneratorProps>(
+  (props, ref) => {
+    const { schema, state: formGenState, model, updateModelValue } = props;
 
-const FormGenerator
-    = React.forwardRef<HTMLFormElement, FormGeneratorProps>
-(({schema, state: formGenState,
-      model, updateModelValue}) => {
     if (formGenState.isLoading) {
-        return (<FormGeneratorLoader />)
+      return <FormGeneratorLoader />;
     }
 
     // TODO: Challenge #5 last_name re-rendered as I change value for first_name. Figure how to optimize this.
     return (
-        <>
-            {
-                schema.definitions.map((field) => (
-                    <FormField
-                        field={field}
-                        path={field.name} // if you are wondering why
-                        value={model?.[field.name]}
-                        errors={formGenState?.errors?.[field.name]}
-                        updateModelValue={updateModelValue}
-                    />
-                ))
-            }
-        </>
+      <div ref={ref}>
+        {schema.definitions.map((field) => (
+          <FormField
+            key={field.name}
+            field={field}
+            path={field.name}
+            value={model?.[field.name]}
+            errors={formGenState?.errors?.[field.name]}
+            updateModelValue={updateModelValue}
+          />
+        ))}
+      </div>
     );
-});
+  }
+);
 
-FormGenerator.displayName = 'FormGenerator';
+FormGenerator.displayName = "FormGenerator";
 
 export { FormGenerator };
